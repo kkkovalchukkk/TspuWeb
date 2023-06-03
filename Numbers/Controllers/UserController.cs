@@ -1,54 +1,63 @@
+using DataBase;
+using DataBase.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Numbers
+
+namespace Numbers.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private IUserRepository userRepository;
+        private readonly IUserRepository userRepository;
 
         public UserController(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }
 
+        // GET api/values
         [HttpGet]
-        public ActionResult Get()
+        public ActionResult<IEnumerable<DbUser>> Get()//
         {
-            var user = userRepository.GetData();
+            DbUser[] data = userRepository.Get();
+            return data;
+        }
+
+        // GET api/values/5
+        [HttpGet("{id}")]   //Get [FromRoute]
+        public ActionResult<DbUser> Get([FromRoute] int id)
+        {
+            var user = userRepository.Get(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
             return Ok(user);
         }
 
-
-        [HttpGet("{id}")]
-        public ActionResult Get([FromRoute] int id)
-        {
-            return Ok(userRepository.GetData(id));
-        }
-
         [HttpPost]
-        public ActionResult Post([FromBody] User user)
+        public ActionResult Post([FromBody] DbUser user)//([FromBody] AddElementContract contract)
         {
-            userRepository.Add(user);
+
+            userRepository.Create(user);
             return Ok();
         }
-
 
         [HttpPut]
-        public ActionResult Put([FromBody] User user, int id)
+        public ActionResult Update([FromBody] DbUser user)//([FromBody] AddElementContract contract)
         {
-            userRepository.Edit(user, id);
-            return Ok();
-        }
-
-        [HttpDelete("{id}")]
-        public ActionResult Delete([FromRoute] int id)
-        {
-            userRepository.Delete(id);
-            return Ok();
-        }
+              userRepository.Update(user);
+              return Ok();
+          }
 
 
+        // GET api/values/5
+        [HttpDelete("{index}")]   //Get [FromRoute]
+          public ActionResult Delete([FromRoute] int id)
+          {
+              userRepository.Delete(id);
+              return Ok();
+          }
     }
 }
