@@ -16,7 +16,6 @@ namespace Numbers.Controllers
             this.userRepository = userRepository;
         }
 
-        // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<DbUser>> Get()//
         {
@@ -24,7 +23,6 @@ namespace Numbers.Controllers
             return data;
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]   //Get [FromRoute]
         public ActionResult<DbUser> Get([FromRoute] int id)
         {
@@ -51,9 +49,7 @@ namespace Numbers.Controllers
               return Ok();
           }
 
-
-        // GET api/values/5
-        [HttpDelete("{index}")]   //Get [FromRoute]
+        [HttpDelete("{id}")]   //Get [FromRoute]
           public ActionResult Delete([FromRoute] int id)
           {
               userRepository.Delete(id);

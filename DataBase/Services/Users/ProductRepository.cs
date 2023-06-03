@@ -19,18 +19,20 @@ namespace DataBase.Services.Users
         }
         Product[] IProductRepository.Get(int page = 1, int onPage = 20, int min_price = 0, int max_price = int.MaxValue)
         {
-            
-            var products = dbContext.Products.OrderBy(p => p.Id).Skip(onPage * (page-1)).Take(onPage);   //Take Skip
-            return products.ToArray();
+            var products = dbContext.Products
+                .Where(p => !p.Isdeleted)
+                .Where(p => p.Price >= min_price && p.Price <= max_price)
+                .OrderBy(p => p.Id)
+                .Skip(onPage * (page-1))
+                .Take(onPage)
+                .ToArray();   //Take Skip
+            return products;
         }
 
         public Product? Get(int id)
         {
-            return dbContext.Products.Find(id);
+            return dbContext.Products.Where(p => !p.Isdeleted).FirstOrDefault(p => p.Id == id);
         }
-
-     
-
 
         void IProductRepository.Create(Product product)
         {
@@ -69,8 +71,6 @@ namespace DataBase.Services.Users
             dbProduct.Isdeleted = true;
             dbContext.SaveChanges();
         }
-
-
     }
 }
 

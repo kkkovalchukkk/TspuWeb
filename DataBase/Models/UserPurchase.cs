@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace DataBase
 {
-    public class DbUser
-    { 
+    public class UserPurchase
+    {
         public int Id { get; set; } 
-        public string Login { get; set; } 
-      
-        public string UserName { get; set; } 
+        public int UserId { get; set; }
+        public int ProductId { get; set; }
 
-        public bool Isdeleted { get; set; }
+        public decimal Price { get; set; }
+
     }
 }

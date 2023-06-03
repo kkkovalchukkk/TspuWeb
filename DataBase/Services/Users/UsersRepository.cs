@@ -2,7 +2,8 @@
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationDbContext dbContext;
+        private readonly ApplicationDbContext dbContext;//Конфигурация БД, созданная ранее подключается через конструктор сервиса
+
         public UserRepository(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -10,11 +11,11 @@
 
         DbUser[] IUserRepository.Get()
         {
-            return dbContext.Users.ToArray(); 
+            return dbContext.Users.Where(u => !u.Isdeleted).ToArray(); // Получение всех пользователей из БД
         }
 
         public DbUser? Get(int id) {
-            return dbContext.Users.Find(id);
+            return dbContext.Users.Where(u => !u.Isdeleted).FirstOrDefault(u => u.Id == id);
         }
 
         void IUserRepository.Create(DbUser user)
@@ -44,12 +45,11 @@
             if (dbUser == null) 
             { 
                 return;
-            } 
+            }
 
 
-            dbContext.Remove(dbUser); 
+            dbUser.Isdeleted=true; 
             dbContext.SaveChanges();
         }
-
     }
 }

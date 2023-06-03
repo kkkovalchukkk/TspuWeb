@@ -18,7 +18,5 @@ namespace DataBase.Services.Users
         void Update(Product product);
 
         void Delete(int id);
-
-
     }
 }
