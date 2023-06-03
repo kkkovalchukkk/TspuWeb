@@ -1,16 +1,22 @@
 ﻿namespace Numbers
 {
-    public class Repository
+    public class UserRepositoryInMemory : IUserRepository
     {
-        private static List<User> Users = new List<User>();
+        private readonly MemoryProvider memoryProvider;
         public static int num = 0;
 
-        public static User[] GetData() {
-            return Users.ToArray();
+        public UserRepositoryInMemory(MemoryProvider memoryProvider)
+        {
+            this.memoryProvider = memoryProvider;
         }
 
-        public static User? GetData(int id) {
-            foreach (var user in Users)
+
+        public  User[] GetData() {
+            return memoryProvider.Users.ToArray();
+        }
+
+        public  User? GetData(int id) {
+            foreach (var user in memoryProvider.Users)
             {
                 if (user.Id == id) return user;
             }
@@ -20,14 +26,14 @@
 
     
 
-        public static void Add(User user) 
+        public void Add(User user) 
         {
             
             user.Id = num++;
-            Users.Add(user);
+            memoryProvider.Users.Add(user);
         }
 
-        public static void Edit(User user, int id)
+        public void Edit(User user, int id)
         {
             User? userInList = GetData(id);
             if (userInList == null)
@@ -40,7 +46,7 @@
         }
 
 
-        public static void Delete(int id) 
+        public void Delete(int id) 
         {
             User? user = GetData(id);
             if (user == null)
@@ -48,7 +54,7 @@
                 return;
             }
 
-            Users.Remove(user);
+            memoryProvider.Users.Remove(user);
         }
 
     }
